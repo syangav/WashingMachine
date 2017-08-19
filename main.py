@@ -121,7 +121,7 @@ def process_image(image_path,crop_,illumination_):
 
     # Define range of green color in HSV
     lower_green = np.array([0,0,illumination_])
-    upper_green = np.array([150,255,255])
+    upper_green = np.array([255,255,255])
 
     # Threshold the HSV image to get only bright part
     mask = cv2.inRange(hsv, lower_green, upper_green)
