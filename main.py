@@ -49,6 +49,13 @@ def local_log(text):
         f.write(new_content)
     f.close()
 
+# http request log
+def request_log(text):
+    new_content = '['+time.strftime("%Y-%m-%d %H:%M:%S",time.localtime()) +']  '+text + '\n'
+    with open('/home/ustone/request_log.txt', 'a+') as f:
+        f.write(new_content)
+    f.close()
+
 # http log
 def http_log(text):
     new_content = '['+time.strftime("%Y-%m-%d %H:%M:%S",time.localtime()) +']  '+text + '\n'
@@ -170,9 +177,16 @@ while True:
     machine_id = conf_json['id']
     ssocr_rotate = conf_json['ssocr_rotate']
     erode_times = conf_json['erode']
+
+
+    # updated on 2018-08-24
     # internet
+    internet_off=0
     while(internet_on()==False):
         time.sleep(2)
+        if(internet_off==4):
+            os.system('reboot')
+        internet_off+=1
     # set ERROR to false
     ERROR = False
     # Record the starting time
@@ -323,6 +337,12 @@ while True:
     if(ERROR == True):
         send_email.log("ERROR",image_path,cropped_path,output_path,ssocr_output,ERROR_CODE)
         error_log(ssocr_output+"   "+ERROR_CODE)
+    
+    # updated on 2017-08-24
+    # request log
+    remaining_minutes_log_text = '-1' if OCCUPIED == False else str(remaining_minutes)
+    request_log('request: remaining_minutes: '+remaining_minutes_log_text)
+
 
     # send data to server
     if(OCCUPIED == True):
