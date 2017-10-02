@@ -131,22 +131,19 @@ def process_image(image_path,crop_,illumination_):
     # computer threshold
     m = np.mean(res)
     v = np.var(res)
-    threshold = m+42+(1000/(50+v))
-    if(threshold>248):
-        threshold = 248
+    threshold = m+35+(20000/(40+v))*((255-m)/255)
+    if(threshold>252):
+        threshold = 252
 
-    
+
     # binary threshold value
     ret,res = cv2.threshold(res,threshold,255,cv2.THRESH_BINARY)
 
 
     # Define kernel and process image erode and dilate
     kernel = np.ones((2,2),np.uint8)
-    res=cv2.dilate(res, kernel, iterations=4)
-    res=cv2.erode(res, kernel, iterations=12)
-    res=cv2.dilate(res, kernel, iterations=12)
     res=cv2.erode(res, kernel, iterations=erode_times)
-    res=cv2.dilate(res, kernel, iterations=6)
+    res=cv2.dilate(res, kernel, iterations=erode_times)
 
 
     # rotate 
