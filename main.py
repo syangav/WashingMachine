@@ -1,6 +1,6 @@
 # 2017-08-19 22:02:56
 # author: Caton ZHONG Zixuan
-# updated at: 2017-08-02
+# updated at: 2017-10-02
 
 import cv2
 import numpy as np
@@ -112,6 +112,7 @@ def process_image(image_path,crop_,illumination_):
     # Rotate image
     img=rotate_bound(img,90)
 
+
     # Transform image
     # pts1 = np.float32([[0,110],[480,0],[0,640],[480,400]])
     pts1 = np.float32([[crop_[4],crop_[0]],[crop_[5],crop_[1]],[crop_[4],640-crop_[2]],[crop_[5],640-crop_[3]]])
@@ -119,40 +120,40 @@ def process_image(image_path,crop_,illumination_):
     M = cv2.getPerspectiveTransform(pts1,pts2)
     img = cv2.warpPerspective(img,M,(640,480))
 
+
+
     cv2.imwrite(cropped_path,img)
 
-    # Blur the image
-    img = cv2.blur(img,(5,5))
+    # rgb to gray
+    res = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # blur
+    res = cv2.GaussianBlur(res,(5,5),0)
+    # computer threshold
+    m = np.mean(res)
+    v = np.var(res)
+    threshold = m+40+(1000/(50+v))
+    if(threshold>246):
+        threshold = 246
 
-    # Convert BGR to HSV
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    print(threshold)
+    # binary threshold value
+    ret,res = cv2.threshold(res,threshold,255,cv2.THRESH_BINARY)
 
-    # Define range of green color in HSV
-    lower_green = np.array([0,0,illumination_])
-    upper_green = np.array([255,255,255])
 
-    # Threshold the HSV image to get only bright part
-    mask = cv2.inRange(hsv, lower_green, upper_green)
-
-    # Bitwise-AND mask and original image
-    res = cv2.bitwise_and(img,img, mask=mask)
-
-    # Convert BGR to GRAY
-    res = cv2.cvtColor(res, cv2.COLOR_BGR2GRAY)
-
-    # Define kernel and process image
+    # Define kernel and process image erode and dilate
     kernel = np.ones((2,2),np.uint8)
-    res=cv2.erode(res, kernel, iterations=5)
-    res=cv2.dilate(res, kernel, iterations=3)
+    res=cv2.erode(res, kernel, iterations=6)
+    res=cv2.dilate(res, kernel, iterations=6)
     res=cv2.erode(res, kernel, iterations=erode_times)
-    res=cv2.dilate(res, kernel, iterations=4)
+    res=cv2.dilate(res, kernel, iterations=6)
 
 
     # rotate 
     res = rotate_bound(res,ssocr_rotate)
 
-    # Convert to black-and-white
+    # white to black
     cv2.bitwise_not(res,res)
+
 
     # Save the image
     #path = "/home/caton/images_bw/" + image_name
@@ -350,22 +351,24 @@ while True:
         payload = {'machine_id': machine_id,'token':token,'remaining_minutes':remaining_minutes,'ip':get_ip(),"Content-Type": "application/json"}
         headers = {'Content-Type': 'application/jsons'}
         response = requests.post(url, data=json.dumps(payload),headers=headers)
+        http_log('response: '+json.dumps(response.json()))
         if (response.status_code == 200):
             conf_json = response.json()
             with open('/home/ustone/conf.json', 'w') as f:
                 json.dump(response.json(), f)
-            http_log('response: '+json.dumps(response.json()))
+            
 
     else:
         url = 'http://188.166.220.165/api/update-machine'
         payload = {'machine_id': machine_id,'token':token,'remaining_minutes':-1,'ip':get_ip(),"Content-Type": "application/json"}
         headers = {'Content-Type': 'application/jsons'}
         response = requests.post(url, data=json.dumps(payload),headers=headers)
+        http_log('response: '+json.dumps(response.json()))
         if (response.status_code == 200):
             conf_json = response.json()
             with open('/home/ustone/conf.json', 'w') as f:
                 json.dump(response.json(), f)
-            http_log('response: '+json.dumps(response.json()))
+            
 
     # send images to server
     send_email.web_images(image_path,cropped_path,output_path,ssocr_output)
