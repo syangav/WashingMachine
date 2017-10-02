@@ -142,8 +142,8 @@ def process_image(image_path,crop_,illumination_):
 
     # Define kernel and process image erode and dilate
     kernel = np.ones((2,2),np.uint8)
-    res=cv2.erode(res, kernel, iterations=6)
-    res=cv2.dilate(res, kernel, iterations=6)
+    res=cv2.erode(res, kernel, iterations=14)
+    res=cv2.dilate(res, kernel, iterations=14)
     res=cv2.erode(res, kernel, iterations=erode_times)
     res=cv2.dilate(res, kernel, iterations=6)
 
