@@ -83,7 +83,7 @@ def log(subject,image_path,cropped_path,output_path,ssocr_output,error_msg):
 	server.quit()
 
 def web_images(image_path,cropped_path,output_path,ssocr_output):
-	url = 'http://188.166.220.165/api/machine-images'
+	url = 'https://ust.one/api/machine-images'
 	files = {}
 	files['original_image']=open(image_path, 'rb')
 	files['cropped_image']=open(cropped_path, 'rb')
