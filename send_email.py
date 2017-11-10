@@ -28,7 +28,8 @@ def get_ip():
 	print (s.getsockname()[0])
 	return s.getsockname()[0]
 
-
+# no longer useful
+# 2017-11-11
 def log(subject,image_path,cropped_path,output_path,ssocr_output,error_msg):
 	msg = MIMEMultipart()
 	msg['From'] = fromaddr
