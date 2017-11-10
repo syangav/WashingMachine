@@ -334,7 +334,7 @@ while True:
 
     # report ERROR
     if(ERROR == True):
-        send_email.log("ERROR",image_path,cropped_path,output_path,ssocr_output,ERROR_CODE)
+        # send_email.log("ERROR",image_path,cropped_path,output_path,ssocr_output,ERROR_CODE)
         error_log(ssocr_output+"   "+ERROR_CODE)
     
     # updated on 2017-08-24
