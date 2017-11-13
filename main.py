@@ -140,10 +140,39 @@ def process_image(image_path,crop_,illumination_):
     ret,res = cv2.threshold(res,threshold,255,cv2.THRESH_BINARY)
 
 
-    # Define kernel and process image erode and dilate
-    kernel = np.ones((2,2),np.uint8)
-    res=cv2.erode(res, kernel, iterations=erode_times)
-    res=cv2.dilate(res, kernel, iterations=erode_times)
+    # Define kernel and process image open, close
+    close_kernel = np.ones((35,35),np.uint8)
+    erode_kernel = np.ones((3,),np.uint8)
+    open_kernel = np.ones((10,10),np.uint8)
+
+    # kernel = np.matrix('0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0; 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0; 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0; 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0; 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0; 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0; 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0; 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0; 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1; 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1; 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1; 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1; 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0; 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0; 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0; 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0; 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0; 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0; 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0; 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0')
+    # [
+    #  [0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0]
+     
+    #  [0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0]
+     
+    #  [0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0]
+     
+    #  [0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0]
+     
+    #  [0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0]
+     
+    #  [0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0]
+     
+    #  [0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0]
+     
+    #  [0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0]
+
+    #  [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
+    #  [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
+    # ]
+
+    res = cv2.morphologyEx(res, cv2.MORPH_CLOSE, close_kernel)
+    res=cv2.erode(res, erode_kernel, iterations = erode_times)
+    res = cv2.morphologyEx(res, cv2.MORPH_OPEN, open_kernel)
+
+    # res=cv2.erode(res, kernel, iterations=erode_times)
+    # res=cv2.dilate(res, kernel, iterations=erode_times)
 
 
     # rotate 
