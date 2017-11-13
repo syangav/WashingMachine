@@ -104,6 +104,7 @@ def rotate_bound(image, angle):
  
     # perform the actual rotation and return the image
     return cv2.warpAffine(image, M, (nW, nH))
+    
 
 def process_image(image_path,crop_,illumination_):
     # Read the image
@@ -140,6 +141,11 @@ def process_image(image_path,crop_,illumination_):
     ret,res = cv2.threshold(res,threshold,255,cv2.THRESH_BINARY)
 
 
+    # rotate 
+    res = rotate_bound(res,ssocr_rotate)
+    # padding
+    res = cv2.copyMakeBorder(res,35,35,35,35,cv2.BORDER_CONSTANT,value=0)
+
     # Define kernel and process image open, close
     close_kernel = np.ones((35,35),np.uint8)
     erode_kernel = np.ones((3,3),np.uint8)
@@ -175,8 +181,7 @@ def process_image(image_path,crop_,illumination_):
     # res=cv2.dilate(res, kernel, iterations=erode_times)
 
 
-    # rotate 
-    res = rotate_bound(res,ssocr_rotate)
+    
 
     # white to black
     cv2.bitwise_not(res,res)
