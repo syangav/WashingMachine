@@ -194,7 +194,8 @@ def process_image(image_path,crop_,illumination_):
     return output_path
 
 
-
+# get ip
+ip = get_ip()
 
 # The working loop
 while True:
@@ -380,7 +381,7 @@ while True:
     # send data to server
     if(OCCUPIED == True):
         url = 'https://ust.one/api/update-machine'
-        payload = {'machine_id': machine_id,'token':token,'remaining_minutes':remaining_minutes,'ip':get_ip(),"Content-Type": "application/json"}
+        payload = {'machine_id': machine_id,'token':token,'remaining_minutes':remaining_minutes,'ip': ip,"Content-Type": "application/json"}
         headers = {'Content-Type': 'application/jsons'}
         response = requests.post(url, data=json.dumps(payload),headers=headers)
         http_log('response: '+json.dumps(response.json()))
@@ -392,7 +393,7 @@ while True:
 
     else:
         url = 'https://ust.one/api/update-machine'
-        payload = {'machine_id': machine_id,'token':token,'remaining_minutes':-1,'ip':get_ip(),"Content-Type": "application/json"}
+        payload = {'machine_id': machine_id,'token':token,'remaining_minutes':-1,'ip': ip,"Content-Type": "application/json"}
         headers = {'Content-Type': 'application/jsons'}
         response = requests.post(url, data=json.dumps(payload),headers=headers)
         http_log('response: '+json.dumps(response.json()))
