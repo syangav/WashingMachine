@@ -132,10 +132,14 @@ def process_image(image_path,crop_,illumination_):
     # computer threshold
     m = np.mean(res)
     v = np.var(res)
-    threshold = m+35+(20000/(40+v))*((255-m)/255)
+
+    threshold = m+35+(20000/(40+v))*((255-m)/255)+illumination_
+
     if(threshold>252):
         threshold = 252
 
+    if(threshold<10):
+        threshold = 10
 
     # binary threshold value
     ret,res = cv2.threshold(res,threshold,255,cv2.THRESH_BINARY)
