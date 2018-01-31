@@ -1,3 +1,4 @@
+
 # How to reset camera:
 
 ## Save the following as `usbreset.c`
@@ -73,4 +74,3 @@ int main(int argc, char **argv)
 	``` bash
 	$ sudo ./usbreset /dev/bus/usb/002/003
 	```   
-
