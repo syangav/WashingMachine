@@ -222,7 +222,7 @@ while True:
     internet_off=0
     while(internet_on()==False):
         time.sleep(2)
-        if(internet_off==15):
+        if(internet_off==30):
             os.system('reboot')
         internet_off+=1
     # set ERROR to false
@@ -289,7 +289,7 @@ while True:
     elif(len(digits) == 1):
 
         # fuck #29, #38 and #42
-        if (  machine_id ==29 or machine_id == 38 or machine_id == 42 ):
+        if (  machine_id in [29,38,42] ):
             if('8' in ssocr_output ):
                 OCCUPIED = False
                 remaining_minutes = -1 
@@ -321,10 +321,14 @@ while True:
             remaining_minutes = -1 
             ERROR = True
             ERROR_CODE = "strange character in ssocr"
-        elif (  machine_id ==29 or machine_id == 38 or machine_id == 42 ):
+        elif (  machine_id in [29,38,42] ):
             if ( '0' in ssocr_output ):
                 OCCUPIED = False
                 remaining_minutes = prev_remaining_minutes
+        elif (  machine_id in [28,37,39,40,49,51,52,54,61,63] ):
+            if ( int(digits) == 11 ):
+                OCCUPIED = False
+                remaining_minutes = -1
         # right
         else:
             OCCUPIED = True
