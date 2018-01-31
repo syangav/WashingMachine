@@ -39,72 +39,71 @@ def send_email(machine_number,hall,machine_type, updated_time, message):
 
 allow_diff_second = 120
 
-
-
-
 down_list = []
 
 maintenance_error_list = []
 
 while True:
 
-	now = datetime.datetime.now()
-	url = "https://ust.one/api/laundry/device-status-check/6"
-	response = urllib.urlopen(url)
-	data = json.loads(response.read())
+	for i in range(1, 9) :
+		if ( i == 7):
+			continue
+		now = datetime.datetime.now()
+		url = "https://ust.one/api/laundry/device-status-check/" + str(i)
+		response = urllib.urlopen(url)
+		data = json.loads(response.read())
+		print now
 
-	print now
-
-	for washer in data['washers']['data']:
-		updated_time = datetime.datetime.strptime(washer["updated_at"], '%Y/%m/%d %H:%M:%S')
-		# print datetime.datetime.now()
-		diff_seconds =  (now - updated_time).total_seconds()
-		print washer['name'] +" "+ str(diff_seconds)
-		if (diff_seconds>allow_diff_second):
-			if (washer["id"] not in down_list):
-				# print washer["id"] + "is down"
-				down_list.append(washer["id"])
-				# notify
-				send_email('#'+washer['name'], washer['hall'], washer['type'], updated_time, "device_power_error")
-		elif washer["id"] in down_list:
-			# print washer["id"] + "recovers"
-			down_list.remove(washer["id"])
-		if (washer['is_down'] == True and washer['remaining_minutes'] != 0 ):
-			if (washer["id"] not in maintenance_error_list):
-				# print washer["id"] + "'s mode needs to be updated"
-				maintenance_error_list.append(washer["id"])
-				# notify
-				send_email('#'+washer['name'], washer['hall'], washer['type'], updated_time, "maintenance_error")
-		elif washer["id"] in maintenance_error_list:
-			# print washer["id"] + "mode may be ok now"
-			maintenance_error_list.remove(washer["id"])
+		for washer in data['washers']['data']:
+			updated_time = datetime.datetime.strptime(washer["updated_at"], '%Y/%m/%d %H:%M:%S')
+			# print datetime.datetime.now()
+			diff_seconds =  (now - updated_time).total_seconds()
+			print washer['name'] +" "+ str(diff_seconds)
+			if (diff_seconds>allow_diff_second):
+				if (washer["id"] not in down_list):
+					# print washer["id"] + "is down"
+					down_list.append(washer["id"])
+					# notify
+					send_email('ID:'+str(washer["id"]) +' - '+'#'+washer['name'], washer['hall'], washer['type'], updated_time, "device_power_error")
+			elif washer["id"] in down_list:
+				# print washer["id"] + "recovers"
+				down_list.remove(washer["id"])
+			if (washer['is_down'] == True and washer['remaining_minutes'] != 0 ):
+				if (washer["id"] not in maintenance_error_list):
+					# print washer["id"] + "'s mode needs to be updated"
+					maintenance_error_list.append(washer["id"])
+					# notify
+					send_email('ID:'+str(washer["id"]) +' - '+'#'+washer['name'], washer['hall'], washer['type'], updated_time, "maintenance_error")
+			elif washer["id"] in maintenance_error_list:
+				# print washer["id"] + "mode may be ok now"
+				maintenance_error_list.remove(washer["id"])
 
 
-	for dryer in data['dryers']['data']:
-		updated_time = datetime.datetime.strptime(dryer["updated_at"], '%Y/%m/%d %H:%M:%S')
-		# print datetime.datetime.now()
-		diff_seconds =  (now - updated_time).total_seconds()
-		print dryer['name'] +" "+ str(diff_seconds)
-		if (diff_seconds>allow_diff_second):
-			if (dryer["id"] not in down_list):
-				down_list.append(dryer["id"])
-				# notify
-				send_email('#'+dryer['name'], dryer['hall'], dryer['type'], updated_time,  "device_power_error")
-		elif dryer["id"] in down_list:
-			down_list.remove(dryer["id"])	
-		if (dryer['is_down'] == True and dryer['remaining_minutes'] != 0 ):
-			if (dryer["id"] not in maintenance_error_list):
-				# print dryer["id"] + "'s mode needs to be updated"
-				maintenance_error_list.append(dryer["id"])
-				# notify
-				send_email('#'+dryer['name'], dryer['hall'], dryer['type'], updated_time, "maintenance_error")
-		elif dryer["id"] in maintenance_error_list:
-			# print dryer["id"] + "mode may be ok now"
-			maintenance_error_list.remove(dryer["id"])	
+		for dryer in data['dryers']['data']:
+			updated_time = datetime.datetime.strptime(dryer["updated_at"], '%Y/%m/%d %H:%M:%S')
+			# print datetime.datetime.now()
+			diff_seconds =  (now - updated_time).total_seconds()
+			print dryer['name'] +" "+ str(diff_seconds)
+			if (diff_seconds>allow_diff_second):
+				if (dryer["id"] not in down_list):
+					down_list.append(dryer["id"])
+					# notify
+					send_email('ID:'+str(dryer["id"]) +' - '+'#'+dryer['name'], dryer['hall'], dryer['type'], updated_time,  "device_power_error")
+			elif dryer["id"] in down_list:
+				down_list.remove(dryer["id"])	
+			if (dryer['is_down'] == True and dryer['remaining_minutes'] != 0 ):
+				if (dryer["id"] not in maintenance_error_list):
+					# print dryer["id"] + "'s mode needs to be updated"
+					maintenance_error_list.append(dryer["id"])
+					# notify
+					send_email('ID:'+str(dryer["id"]) +' - '+'#'+dryer['name'], dryer['hall'], dryer['type'], updated_time, "maintenance_error")
+			elif dryer["id"] in maintenance_error_list:
+				# print dryer["id"] + "mode may be ok now"
+				maintenance_error_list.remove(dryer["id"])	
 
-	print "down list: "
-	print down_list
-	print "maintenance error list: "
-	print maintenance_error_list
+		print "down list: "
+		print down_list
+		print "maintenance error list: "
+		print maintenance_error_list
 
 	time.sleep(15)
