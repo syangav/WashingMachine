@@ -223,7 +223,7 @@ while True:
     while(internet_on()==False):
         time.sleep(2)
         if(internet_off==30):
-            os.system('reboot')
+            commands.getoutput('reboot')
         internet_off+=1
     # set ERROR to false
     ERROR = False
