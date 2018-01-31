@@ -18,7 +18,7 @@ import urllib2
 cycle_time = 15
 
 # Number of frames to throw away while the camera adjusts to light levels
-ramp_frames = 30
+ramp_frames = 13
 
 # Initialize the counter so that we can give different names to images
 num = 1
@@ -222,7 +222,7 @@ while True:
     internet_off=0
     while(internet_on()==False):
         time.sleep(2)
-        if(internet_off==4):
+        if(internet_off==15):
             os.system('reboot')
         internet_off+=1
     # set ERROR to false
@@ -275,7 +275,7 @@ while True:
     # check the length of recognized digits string
     if (len(digits) == 0):
         # no pixel
-        if(ssocr_output[:4] == 'iter'):
+        if(ssocr_output[:4] == 'iter' or ssocr_output == '_e' or ssocr_output == 'a_' or ssocr_output == '__' or ssocr_output == '_'):
             OCCUPIED = True
             remaining_minutes = 0
         # no digit
@@ -287,10 +287,27 @@ while True:
     
     # only one digit
     elif(len(digits) == 1):
-        OCCUPIED = False
-        remaining_minutes = -1
-        ERROR = True
-        ERROR_CODE = "length of recognized digits is only 1"
+
+        # fuck #29, #38 and #42
+        if (  machine_id ==29 or machine_id == 38 or machine_id == 42 ):
+            if('8' in ssocr_output ):
+                OCCUPIED = False
+                remaining_minutes = -1 
+            elif('_' in ssocr_output or '-' in ssocr_output):
+                OCCUPIED = False
+                remaining_minutes = -1 
+                ERROR = True
+                ERROR_CODE = "strange character in ssocr"
+            # right
+            else:
+                OCCUPIED = True
+                remaining_minutes = int(digits)
+
+        else:
+            OCCUPIED = False
+            remaining_minutes = -1
+            ERROR = True
+            ERROR_CODE = "length of recognized digits is only 1"
 
     # maybe right
     elif (len(digits) == 2 and len(ssocr_output) == 2):
@@ -304,6 +321,10 @@ while True:
             remaining_minutes = -1 
             ERROR = True
             ERROR_CODE = "strange character in ssocr"
+        elif (  machine_id ==29 or machine_id == 38 or machine_id == 42 ):
+            if ( '0' in ssocr_output ):
+                OCCUPIED = False
+                remaining_minutes = prev_remaining_minutes
         # right
         else:
             OCCUPIED = True
@@ -320,10 +341,6 @@ while True:
             remaining_minutes = -1 
             ERROR = True
             ERROR_CODE = "strange character in ssocr"
-        # give chance to .
-        elif('.' in ssocr_output and abs(prev_remaining_minutes-int(digits))<=1):
-            OCCUPIED = True
-            remaining_minutes = int(digits)
         # strange characters
         else:
             OCCUPIED = False
@@ -428,7 +445,6 @@ while True:
         time.sleep(cycle_time)
 
 error_log('jump out of the loop')
-
 
 
 
