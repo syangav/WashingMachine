@@ -275,7 +275,7 @@ while True:
     # check the length of recognized digits string
     if (len(digits) == 0):
         # no pixel
-        if(ssocr_output[:4] == 'iter' or ssocr_output == '_e' or ssocr_output == 'a_' or ssocr_output == '__' or ssocr_output == '_'):
+        if(ssocr_output[:4] == 'iter' or ssocr_output == '_d' or ssocr_output == '_e' or ssocr_output == 'a_' or ssocr_output == '__' or ssocr_output == '_'):
             OCCUPIED = True
             remaining_minutes = 0
         # no digit
