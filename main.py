@@ -346,11 +346,10 @@ while True:
             ERROR = True
             ERROR_CODE = "strange character in ssocr"
         # strange characters
+        # right
         else:
-            OCCUPIED = False
-            remaining_minutes = -1 
-            ERROR = True
-            ERROR_CODE = "strange character in ssocr"
+            OCCUPIED = True
+            remaining_minutes = int(digits)
     else:  
         OCCUPIED = False
         remaining_minutes = -1
