@@ -317,7 +317,7 @@ while True:
             ERROR_CODE = "length of recognized digits is only 1"
 
     # maybe right
-    elif (len(digits) == 2 and len(ssocr_output) == 2):
+    elif (len(digits) == 2):
         # skip 8
         if('8' in ssocr_output and abs(prev_remaining_minutes-int(digits))>1):
             OCCUPIED = False
@@ -341,22 +341,22 @@ while True:
             OCCUPIED = True
             remaining_minutes = int(digits)
 
-    elif(len(digits) == 2 and len(ssocr_output) > 2):
-        # skip 8
-        if('8' in ssocr_output and abs(prev_remaining_minutes-int(digits))>1):
-            OCCUPIED = False
-            remaining_minutes = -1 
-        # not allow _ and -
-        elif('_' in ssocr_output or '-' in ssocr_output):
-            OCCUPIED = False
-            remaining_minutes = -1 
-            ERROR = True
-            ERROR_CODE = "strange character in ssocr"
-        # strange characters
-        # right
-        else:
-            OCCUPIED = True
-            remaining_minutes = int(digits)
+    # elif(len(digits) == 2 and len(ssocr_output) > 2):
+    #     # skip 8
+    #     if('8' in ssocr_output and abs(prev_remaining_minutes-int(digits))>1):
+    #         OCCUPIED = False
+    #         remaining_minutes = -1 
+    #     # not allow _ and -
+    #     elif('_' in ssocr_output or '-' in ssocr_output):
+    #         OCCUPIED = False
+    #         remaining_minutes = -1 
+    #         ERROR = True
+    #         ERROR_CODE = "strange character in ssocr"
+    #     # strange characters
+    #     # right
+    #     else:
+    #         OCCUPIED = True
+    #         remaining_minutes = int(digits)
     else:  
         OCCUPIED = False
         remaining_minutes = -1
