@@ -197,6 +197,13 @@ def process_image(image_path,crop_,illumination_):
     cv2.imwrite(output_path,res)
     return output_path
 
+# internet
+internet_off=0
+while(internet_on()==False):
+    time.sleep(2)
+    if(internet_off==30):
+        commands.getoutput('reboot')
+    internet_off+=1
 
 # get ip
 ip = get_ip()
@@ -324,7 +331,7 @@ while True:
         elif (  machine_id in [29,38,42] ):
             if ( '0' in ssocr_output ):
                 OCCUPIED = False
-                remaining_minutes = prev_remaining_minutes
+                remaining_minutes = -1
         elif (  machine_id in [28,37,39,40,49,51,52,54,61,63] ):
             if ( int(digits) == 11 ):
                 OCCUPIED = False
