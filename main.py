@@ -300,7 +300,7 @@ while True:
             if('8' in ssocr_output ):
                 OCCUPIED = False
                 remaining_minutes = -1 
-                RROR = True
+                ERROR = True
                 ERROR_CODE = "red 8 error"
             elif('_' in ssocr_output or '-' in ssocr_output):
                 OCCUPIED = False
@@ -324,7 +324,7 @@ while True:
         if('8' in ssocr_output and abs(prev_remaining_minutes-int(digits))>1):
             OCCUPIED = False
             remaining_minutes = -1 
-            RROR = True
+            ERROR = True
             ERROR_CODE = "8 error"
         # strange characters
         elif('_' in ssocr_output or '-' in ssocr_output):
@@ -336,7 +336,7 @@ while True:
             if ( '0' in ssocr_output):
                 OCCUPIED = False
                 remaining_minutes = -1
-                RROR = True
+                ERROR = True
                 ERROR_CODE = "red 0"
         elif (  machine_id in [28,37,39,40,49,51,52,54,61,63] ):
             if ( int(digits) == 11 ):
