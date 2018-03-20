@@ -37,7 +37,7 @@ def send_email(machine_number,hall,machine_type, updated_time, message):
 	server.quit()
 
 
-allow_diff_second = 120
+allow_diff_second = 1200
 
 down_list = []
 
