@@ -157,6 +157,8 @@ sudo crontab -e
 ——————————————
 
 
+0,30 * * * * /bin/systemctl restart ustone.service
+30 6 * * * sh /home/ustone/update.sh > /home/ustone/update.log 2>&1
 */2 * * * * sh /home/ustone/wifi_rebooter.sh > /home/ustone/wifi.log 2>&1
 
 ——————————————
@@ -164,6 +166,11 @@ sudo crontab -e
 sudo systemctl enable wpa_supplicant.service
 
 ——————————————
+
+
+
+
+
 
 cp /usr/share/zoneinfo/Asia/Hong_Kong /etc/localtime
 systemctl stop ustone.service
